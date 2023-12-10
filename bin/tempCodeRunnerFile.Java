@@ -1,0 +1,1 @@
+    // waitingTime=time-(processes.get(totalProcesses-1).burstTime-processes.get(totalProcesses-2).burstTime);
