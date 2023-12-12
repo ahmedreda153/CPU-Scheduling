@@ -1,6 +1,4 @@
-
-
-public class Process  {
+public class Process {
     int processID;
     int burstTime;
     int startingTime;
@@ -9,6 +7,7 @@ public class Process  {
     int arriveTime;
     int turnarround;
     int waitingTime;
+    int priority;
 
     public Process(){
         this.burstTime = 0;
@@ -30,23 +29,76 @@ public class Process  {
         this.startingTime = -1;
         this.remainingTime = burstTime;
     }
-    
-    void setStartingTime(int startingTime){
-        this.startingTime=startingTime;
+
+    public Process(int id, int arrivalTime, int burstTime, int priority) {
+        this.processID = id;
+        this.arriveTime = arrivalTime;
+        this.burstTime = burstTime;
+        this.priority = priority;
     }
 
-    void setRemainingTime(int reminingTime){
-        this.remainingTime = reminingTime;
+    public int getId() {
+        return processID;
     }
 
-    void setCompletionTime(int completionTime){
+    public void setID(int id) {
+        this.processID = id;
+    }
+
+    public int getArriveTime() {
+        return arriveTime;
+    }
+
+    public void setArriveTime(int arrivalTime) {
+        this.arriveTime = arrivalTime;
+    }
+
+    public int getBurstTime() {
+        return burstTime;
+    }
+
+    public void setBurstTime(int burstTime) {
+        this.burstTime = burstTime;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
+    public int getTurnAroundTime() {
+        return turnarround;
+    }
+
+    public void setTurnAroundTime(int turnAroundTime) {
+        this.turnarround = turnAroundTime;
+    }
+
+    public int getCompletionTime() {
+        return completionTime;
+    }
+
+    public void setCompletionTime(int completionTime) {
         this.completionTime = completionTime;
     }
 
-    void setArriveTime(int arriveTime){
-        this.arriveTime = arriveTime;
+    public void setStartingTime(int startingTime){
+        this.startingTime=startingTime;
     }
-   
 
-    
+    public void setRemainingTime(int reminingTime){
+        this.remainingTime = reminingTime;
+    }
+
 }
