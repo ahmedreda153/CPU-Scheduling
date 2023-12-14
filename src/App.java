@@ -10,8 +10,11 @@ public class App {
         processes.add(new Process(4, 4,5));
         // SJF sjf = new SJF(processes);
         // sjf.sjfScheduling(processes);
-        SRTF srtf = new SRTF(processes);
-        srtf.SRTFScheduling();
+        // SRTF srtf = new SRTF(processes);
+        // srtf.SRTFScheduling();
+
+        AG ag = new AG();
+        System.out.println(ag.random_function(0, 20));
     }
 }
 
