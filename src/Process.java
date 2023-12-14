@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Process {
     int processID;
     int burstTime;
@@ -9,6 +12,9 @@ public class Process {
     int waitingTime;
     int priority;
     int waitingTimeCounter;
+    int quantum;
+    int AGFactor;
+    List<Integer> quantumHistory;
 
 
     public Process(){
@@ -18,18 +24,21 @@ public class Process {
         this.processID = -1;
         this.remainingTime =0;
         this.arriveTime = 0;
+        this.quantumHistory = new ArrayList<>();
     }
     
     public Process(int processID, int burstTime) {
         this.processID = processID;
         this.burstTime = burstTime;
+        this.remainingTime = burstTime;
+        this.quantumHistory = new ArrayList<>();
     }
      public Process(int processID, int burstTime,int arriveTime) {
         this.processID = processID;
         this.burstTime = burstTime;
         this.arriveTime=arriveTime;
-        this.startingTime = -1;
         this.remainingTime = burstTime;
+        this.quantumHistory = new ArrayList<>();
     }
 
     public Process(int id, int arrivalTime, int burstTime, int priority) {
@@ -37,6 +46,8 @@ public class Process {
         this.arriveTime = arrivalTime;
         this.burstTime = burstTime;
         this.priority = priority;
+        this.remainingTime = burstTime;
+        this.quantumHistory = new ArrayList<>();
     }
 
     public int getId() {

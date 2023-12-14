@@ -26,6 +26,7 @@ public class SRTF {
             }
         });
         this.finishedProcess = new ArrayList<>();
+        this.process.sort((p1, p2) -> p1.getArriveTime() - p2.getArriveTime());
     }
     public void SRTFScheduling()
     {
