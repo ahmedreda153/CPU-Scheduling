@@ -9,6 +9,7 @@ public class SRTF {
     List<Process> process;
     PriorityQueue<Process> queueProcess;
     List<Process> finishedProcess;
+    List<Integer> timeline = new ArrayList<>();
 
     SRTF(List<Process> process){
         this.process = process;
@@ -32,74 +33,110 @@ public class SRTF {
         for(Process p:process){
             totalProcessTime += p.burstTime;
         }
-       int time = 0;
-       int processIndex = 0;
-       Process shortestJopProcess = new Process();
-       Process runiningProcess= new Process();
-       System.out.println(totalProcessTime);
-       for(time=0;time<=totalProcessTime;time++){
+        int starvationTime = 5;
+            int time = 0;
+            int processIndex = 0;
 
+            Process shortestJopProcess = new Process();
+            Process runiningProcess= new Process();
+            System.out.println(totalProcessTime);
+            for(time=0;time<=totalProcessTime;time++){
+            boolean hasStarvation = false;
 
-           if (processIndex < process.size()  && time == process.get(processIndex).arriveTime ) {
-               queueProcess.add(process.get(processIndex));
-               processIndex++;
+            if (processIndex < process.size()  && time == process.get(processIndex).arriveTime ) {
+                queueProcess.add(process.get(processIndex));
+                processIndex++;
             }
-           
-            if (queueProcess.size()!=0) {
-                shortestJopProcess = queueProcess.poll();
+
+            for (Process p : queueProcess) {
+                p.incrementWaitingTimeCounter();
             }
-            if (runiningProcess.processID != -1) {
-                if (runiningProcess.remainingTime > shortestJopProcess.remainingTime) {
-                    queueProcess.add(runiningProcess);
-                    runiningProcess = shortestJopProcess;
-                }else{
-                    if (!runiningProcess.equals(shortestJopProcess))
-                        queueProcess.add(shortestJopProcess); 
+            for (Process process : queueProcess) {
+                if (process.waitingTimeCounter == starvationTime) {
+                    if (runiningProcess.processID != -1) {
+                        queueProcess.add(runiningProcess);
+                    }
+                    process.waitingTimeCounter = 0;
+                    runiningProcess = process;
+                    queueProcess.remove(process);
+                    hasStarvation = true;
+                    break;
                 }
-            }else{
-                runiningProcess = shortestJopProcess;
             }
-            
+
+            if(!hasStarvation){
+                if (queueProcess.size()!=0) {
+                    shortestJopProcess = queueProcess.poll();
+                }
+                if (runiningProcess.processID != -1) {
+                    if (runiningProcess.remainingTime > shortestJopProcess.remainingTime) {
+                        queueProcess.add(runiningProcess);
+                        runiningProcess = shortestJopProcess;
+                    }else{
+                        if (!runiningProcess.equals(shortestJopProcess))
+                            queueProcess.add(shortestJopProcess); 
+                    }
+                }else{
+                    runiningProcess = shortestJopProcess;
+                }
+            }
+
             if (runiningProcess.processID != -1) {
                 if (runiningProcess.startingTime == -1) {
                     runiningProcess.startingTime = time;
                 }
-                // System.out.println("Time "+time+" " + runiningProcess.processID + " "+runiningProcess.burstTime+" "+runiningProcess.remainingTime );
-                System.out.println("Time "+time+" P" + runiningProcess.processID );
+                timeline.add(runiningProcess.processID);
+                // System.out.println("Time: "+time+" Process: "+runiningProcess.processID);
                 runiningProcess.remainingTime--;     
                 if (runiningProcess.remainingTime == 0) {
                     runiningProcess.completionTime = time+1;
                     finishedProcess.add(runiningProcess);
                     runiningProcess = new Process();
                 }
-            }
-
-            // System.out.println("Processes at Wating Queue:");
-            // for(Process p :queueProcess){
-            //      System.out.println("Time "+time+" " + p.processID + " "+p.burstTime+" "+p.remainingTime );
-            // }
-            // System.out.println();
-             
+            }  
             
        }
-       int totalTurnarround = 0 ;
-       int totalWaitingTime = 0;
-       for(Process p : finishedProcess){
-            p.turnarround = p.completionTime-p.arriveTime;
-            p.waitingTime = p.turnarround - p.burstTime;
-            totalTurnarround+=p.turnarround;
-            totalWaitingTime += p.waitingTime;
-            System.out.println("P"+p.processID+ " turnaround: "+p.turnarround+", waiting time: "+p.waitingTime);
-       }
-
-       int avgTurnarround = totalTurnarround / finishedProcess.size() ;
-       int avgWaitingTime = totalWaitingTime / finishedProcess.size() ;
 
        
+        printTimeline();
+        calcAndPrintWaitingAndTurnarround();
+    
+    }
+
+    private void printTimeline(){
+        int i =0;
+        int j = 0;
+        while (true) {
+                System.out.print("Start time from "+i);
+                for(;i<timeline.size();i++){
+                    if(timeline.get(i) != timeline.get(j)){
+                        break;
+                    }
+                }
+                j = i;
+                System.out.println(" to "+i+" for process "+ timeline.get(i-1));
+                if (j>=timeline.size()) {
+                    break;
+                }
+        }
+    }
+
+    private void calcAndPrintWaitingAndTurnarround(){
+        int totalTurnarround = 0 ;
+        int totalWaitingTime = 0;
+        for(Process p : finishedProcess){
+                p.turnarround = p.completionTime-p.arriveTime;
+                p.waitingTime = p.turnarround - p.burstTime;
+                totalTurnarround+=p.turnarround;
+                totalWaitingTime += p.waitingTime;
+                System.out.println("P"+p.processID+ " turnaround: "+p.turnarround+", waiting time: "+p.waitingTime);
+        }
+
+        int avgTurnarround = totalTurnarround / finishedProcess.size() ;
+        int avgWaitingTime = totalWaitingTime / finishedProcess.size() ;
+
         System.out.println("Avg Turnarround: "+ avgTurnarround);
         System.out.println("Avg Waiting Time: "+avgWaitingTime);
-
-    
     }
     
 }

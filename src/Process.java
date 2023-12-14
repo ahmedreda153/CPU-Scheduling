@@ -8,6 +8,8 @@ public class Process {
     int turnarround;
     int waitingTime;
     int priority;
+    int waitingTimeCounter;
+
 
     public Process(){
         this.burstTime = 0;
@@ -99,6 +101,14 @@ public class Process {
 
     public void setRemainingTime(int reminingTime){
         this.remainingTime = reminingTime;
+    }
+
+    public void incrementWaitingTimeCounter() {
+        waitingTimeCounter++;
+    }
+
+    public int getWaitingTimeCounter() {
+        return waitingTimeCounter;
     }
 
 }
