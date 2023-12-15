@@ -1,1 +1,1 @@
-    // waitingTime=time-(processes.get(totalProcesses-1).burstTime-processes.get(totalProcesses-2).burstTime);
+ System.out.println("Average waiting time = " + (float) totalWaitingTime / processes.size());

@@ -6,6 +6,13 @@
       "name": "App",
       "request": "launch",
       "mainClass": "App",
+      "projectName": "CPU-Scheduling_557b1b9f"
+    },
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "App",
       "projectName": "Assignment3_4ada73a1"
     },
     {

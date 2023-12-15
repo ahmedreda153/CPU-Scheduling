@@ -122,4 +122,10 @@ public class Process {
         return waitingTimeCounter;
     }
 
+    public int getStartingTime(){
+        return startingTime;
+    }
+
+
+
 }
