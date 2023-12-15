@@ -34,7 +34,7 @@ public class SRTF {
         for(Process p:process){
             totalProcessTime += p.burstTime;
         }
-        int starvationTime = 20;
+        int starvationTime = 5;
             int time = 0;
             int processIndex = 0;
 
@@ -117,7 +117,14 @@ public class SRTF {
                     }
                 }
                 j = i;
-                System.out.println(" to "+i+" for process "+ timeline.get(i-1));
+                String processName = "";
+                for (Process process : finishedProcess) {
+                    if (process.processID == timeline.get(i-1)) {
+                        processName = process.name;
+                        break;
+                    }
+                }
+                System.out.println(" to "+i+" for process "+ processName);
                 if (j>=timeline.size()) {
                     break;
                 }
@@ -125,6 +132,8 @@ public class SRTF {
     }
 
     private void calcAndPrintWaitingAndTurnarround(){
+        System.out.println("Turnaround and waiting time for each process");
+        System.out.println("------------------------");
         int totalTurnarround = 0 ;
         int totalWaitingTime = 0;
         for(Process p : finishedProcess){
@@ -132,14 +141,17 @@ public class SRTF {
                 p.waitingTime = p.turnarround - p.burstTime;
                 totalTurnarround+=p.turnarround;
                 totalWaitingTime += p.waitingTime;
-                System.out.println("P"+p.processID+ " turnaround: "+p.turnarround+", waiting time: "+p.waitingTime);
+                System.out.println(p.name+ " turnaround: "+p.turnarround+", waiting time: "+p.waitingTime);
         }
 
-        int avgTurnarround = totalTurnarround / finishedProcess.size() ;
-        int avgWaitingTime = totalWaitingTime / finishedProcess.size() ;
-
-        System.out.println("Avg Turnarround: "+ avgTurnarround);
-        System.out.println("Avg Waiting Time: "+avgWaitingTime);
+        float avgTurnarround = totalTurnarround / (float)finishedProcess.size() ;
+        float avgWaitingTime = totalWaitingTime / (float)finishedProcess.size() ;
+        System.out.println("Average Turn Around Time");
+        System.out.println("------------------------");
+        System.out.println( avgTurnarround);
+        System.out.println("Average Waiting Time");
+        System.out.println("--------------------");
+        System.out.println(avgWaitingTime);
     }
     
 }

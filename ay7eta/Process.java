@@ -17,9 +17,11 @@ public class Process {
     int quantum;
     int AGFactor;
     List<Integer> quantumHistory;
+    boolean isStarted=false;
 
 
     public Process(){
+        this.name=""   ;
         this.burstTime = 0;
         this.completionTime = 0;
         this.startingTime = 0 ;
@@ -36,14 +38,18 @@ public class Process {
         this.arriveTime=arrivalTime;
         this.burstTime=burstTime;
         this.priority=priority;
+        this.remainingTime = burstTime;
+         this.quantumHistory = new ArrayList<>();
     }
     public Process(int processID, int burstTime) {
+         this.name=""   ;
         this.processID = processID;
         this.burstTime = burstTime;
         this.remainingTime = burstTime;
         this.quantumHistory = new ArrayList<>();
     }
      public Process(int processID, int burstTime,int arriveTime) {
+         this.name=""   ;
         this.processID = processID;
         this.burstTime = burstTime;
         this.arriveTime=arriveTime;
@@ -52,6 +58,7 @@ public class Process {
     }
 
     public Process(int id, int arrivalTime, int burstTime, int priority) {
+         this.name=""   ;
         this.processID = id;
         this.arriveTime = arrivalTime;
         this.burstTime = burstTime;

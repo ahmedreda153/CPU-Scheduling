@@ -60,12 +60,13 @@ public class AG {
             if (arrivedProcesses.isEmpty() && processIndex < processes.size()  && time >= processes.get(processIndex).arriveTime ) {
                 runningProcess = processes.get(processIndex);
                 arrivedProcesses.add(processes.get(processIndex));
+
                 processIndex++;
             } 
             if (runningProcess.processID == -1 && !readyQueue.isEmpty()) {
                 runningProcess = readyQueue.poll();
             } 
-            System.out.println("P"+runningProcess.processID);
+            System.out.print(runningProcess.name + " from time "+ time);
             time += Math.min(Math.ceil(runningProcess.quantum * 0.5), runningProcess.remainingTime);
             runningProcess.remainingTime -= Math.ceil(runningProcess.quantum * 0.5);
             int currSteps = 0;
@@ -81,10 +82,12 @@ public class AG {
                 runningProcess.quantum += runningProcess.quantum - Math.ceil(runningProcess.quantum * 0.5);
                 runningProcess.quantumHistory.add(runningProcess.quantum);
                 readyQueue.add(runningProcess);
+                System.out.println(" "+runningProcess.name + " to time "+ time);
                 runningProcess = temp;
+                System.out.print(runningProcess.name + " from time "+ time);
                 time += Math.min(Math.ceil(runningProcess.quantum * 0.5), runningProcess.remainingTime)  ;
                 runningProcess.remainingTime -= Math.ceil(runningProcess.quantum * 0.5);
-                System.out.println("P"+runningProcess.processID);
+               
                
             }
             
@@ -95,11 +98,13 @@ public class AG {
                         runningProcess.quantumHistory.add(runningProcess.quantum);
                         arrivedProcesses.add(processes.get(processIndex));
                         readyQueue.add(runningProcess);
+                        System.out.println(" "+runningProcess.name + " to time "+ time);
                         runningProcess = processes.get(processIndex);
                         processIndex++;
                         
                         break;
                     } else {
+                        
                         arrivedProcesses.add(processes.get(processIndex));
                         readyQueue.add(processes.get(processIndex));
                         processIndex++;
@@ -129,7 +134,8 @@ public class AG {
                             }
                         }
                     }
-                    
+                    System.out.println(" "+runningProcess.name + " to time "+ time);
+                    runningProcess.completionTime = time;
                     dieList.add(runningProcess);
                     if (!readyQueue.isEmpty()) {
                         runningProcess = readyQueue.poll();
@@ -145,6 +151,8 @@ public class AG {
                     runningProcess.quantum += Math.ceil((totalQuantum/arrivedProcesses.size())*0.1);
                     runningProcess.quantumHistory.add(runningProcess.quantum);
                     readyQueue.add(runningProcess);
+                    System.out.println(" "+runningProcess.name + " to time "+ time);
+
                     runningProcess = readyQueue.poll();
                     break;
                 }  else {
@@ -155,43 +163,14 @@ public class AG {
                 
             }
             
-
-
         }
+       
         for (Process process : processes) {
-            System.out.println("P"+process.processID+" "+process.quantumHistory);
+            System.out.println(process.name+" History Of Quantum: "+process.quantumHistory);
         }
+        calcAndPrintWaitingAndTurnarround();
     }
-
-    public void roundRobin() {
-        int size = processes.size();
-        int time = 0;
-        int k = 0;
-        while (size  > 0) {
-            if (processes.get(k).arriveTime > time) {
-                k++;
-                continue;
-            }
-            else if (processes.get(k).remainingTime <= quantum) {
-                time += processes.get(0).remainingTime;
-                processes.get(0).completionTime = time;
-                processes.get(0).turnarround = processes.get(0).completionTime - processes.get(0).arriveTime;
-                turnAroundTime.put(processes.get(0).processID, processes.get(0).turnarround);
-                processes.get(0).waitingTime = processes.get(0).turnarround - processes.get(0).burstTime;
-                waitingTime.put(processes.get(0).processID, processes.get(0).waitingTime);
-                ganttChart.add(processes.get(0));
-                processes.remove(0);
-                size--;
-            } else {
-                time += quantum;
-                processes.get(0).remainingTime -= quantum;
-                ganttChart.add(processes.get(0));
-                processes.add(processes.get(0));
-                processes.remove(0);
-            }
-            k = 0;
-        }
-    }
+   
 
     public void printGanttChart() {
         System.out.println("Gantt Chart:");
@@ -200,48 +179,31 @@ public class AG {
         }
         System.out.println();
     }
-
-    public void printWaitingTime() {
-        System.out.println("Waiting Time");
-        System.out.println("------------");
-        for (HashMap.Entry<Integer, Integer> entry : waitingTime.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
+    private void calcAndPrintWaitingAndTurnarround(){
+        System.out.println("Turnaround and waiting time for each process");
+        System.out.println("------------------------");
+        int totalTurnarround = 0 ;
+        int totalWaitingTime = 0;
+        for(Process p : dieList){
+                p.turnarround = p.completionTime-p.arriveTime;
+                p.waitingTime = p.turnarround - p.burstTime;
+                totalTurnarround+=p.turnarround;
+                totalWaitingTime += p.waitingTime;
+                System.out.println(p.name+ " turnaround: "+p.turnarround+", waiting time: "+p.waitingTime);
         }
-        System.out.println();
-    }
 
-    public void printAverageWaitingTime() {
-        System.out.println("Average Waiting Time");
-        System.out.println("--------------------");
-        double averageWaitingTime = 0;
-        for (HashMap.Entry<Integer, Integer> entry : waitingTime.entrySet()) {
-            averageWaitingTime += entry.getValue();
-        }
-        averageWaitingTime /= waitingTime.size();
-        System.out.println(averageWaitingTime);
-        System.out.println();
-    }
+        float avgTurnarround = totalTurnarround / (float)dieList.size() ;
+        float avgWaitingTime = totalWaitingTime / (float)dieList.size() ;
 
-    public void printTurnAroundTime() {
-        System.out.println("Turn Around Time");
-        System.out.println("----------------");
-        for (HashMap.Entry<Integer, Integer> entry : turnAroundTime.entrySet()) {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-        System.out.println();
-    }
-
-    public void printAverageTurnAroundTime() {
         System.out.println("Average Turn Around Time");
         System.out.println("------------------------");
-        double averageTurnAroundTime = 0;
-        for (HashMap.Entry<Integer, Integer> entry : turnAroundTime.entrySet()) {
-            averageTurnAroundTime += entry.getValue();
-        }
-        averageTurnAroundTime /= turnAroundTime.size();
-        System.out.println(averageTurnAroundTime);
-        System.out.println();
+        System.out.println( avgTurnarround);
+        System.out.println("Average Waiting Time");
+        System.out.println("--------------------");
+        System.out.println(avgWaitingTime);
     }
+
+   
 
     private Integer random_function(Integer start,Integer end){
         return (int)(Math.random()*(end-start+1)+start);

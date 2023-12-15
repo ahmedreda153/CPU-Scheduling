@@ -1,1 +1,0 @@
- System.out.println("Average waiting time = " + (float) totalWaitingTime / processes.size());

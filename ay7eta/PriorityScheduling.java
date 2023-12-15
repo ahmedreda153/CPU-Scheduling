@@ -1,14 +1,16 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 public class PriorityScheduling {
-    private ArrayList<Process> processes;
+    private List<Process> processes;
     private ArrayList<Process> ganttChart;
     private HashMap<Integer, Integer> waitingTime;
     private HashMap<Integer, Integer> turnAroundTime;
     private ArrayList<Process> arrivedProcesses;
 
-    public PriorityScheduling(ArrayList<Process> processes) {
+    public PriorityScheduling(List<Process> processes) {
         this.processes = processes;
         ganttChart = new ArrayList<Process>();
         waitingTime = new HashMap<Integer, Integer>();
@@ -16,7 +18,7 @@ public class PriorityScheduling {
         arrivedProcesses = new ArrayList<Process>();
 
         // Sort the processes by priority ascendingly
-        processes.sort((p1, p2) -> p1.getPriority() - p2.getPriority());
+        processes.sort((p1, p2) -> p1.getArriveTime() - p2.getArriveTime());
     }
 
     public PriorityScheduling() {
@@ -24,6 +26,8 @@ public class PriorityScheduling {
         ganttChart = new ArrayList<Process>();
         waitingTime = new HashMap<Integer, Integer>();
         turnAroundTime = new HashMap<Integer, Integer>();
+        arrivedProcesses = new ArrayList<Process>();
+
     }
 
     public int getHighestPriorityIndex(ArrayList<Process> processes) {
@@ -59,7 +63,7 @@ public class PriorityScheduling {
         return false;
     }
 
-    public int searchProcessIndex(ArrayList<Process> processes, int id) {
+    public int searchProcessIndex(List<Process> processes, int id) {
         for (int i = 0; i < processes.size(); i++) {
             if (processes.get(i).getId() == id) {
                 return i;
@@ -69,12 +73,14 @@ public class PriorityScheduling {
     }
 
     public void buildGanttChart() {
-        int time = 0;
+        int time = processes.get(0).getArriveTime();
         int starv = 0;
         int index = 0;
         int size = processes.size();
         int k = 0;
+       
         while (size > 0) {
+            arrivedProcesses.clear();
             if (starv == 3) {
                 starv = 0;
                 for (int i = 0; i < processes.size(); i++) {
@@ -82,6 +88,7 @@ public class PriorityScheduling {
                 }
             } else {
                 starv++;
+                 processes.get(k).startingTime = time;
                 time += processes.get(k).getBurstTime();
                 processes.get(k).setCompletionTime(time);
                 processes.get(k)
@@ -96,6 +103,7 @@ public class PriorityScheduling {
                     for (int i = 0; i < processes.size(); i++) {
                         if (processes.get(i).getArriveTime() <= time) {
                             arrivedProcesses.add(processes.get(i));
+                            
                         }
                     }
                 }
@@ -106,13 +114,18 @@ public class PriorityScheduling {
                 }
             }
         }
+        printGanttChart();
+        printWaitingTime();
+        printTurnAroundTime();
+        printAverageWaitingTime();  
+        printAverageTurnAroundTime();
     }
 
     public void printGanttChart() {
         System.out.println("Gantt Chart");
         System.out.println("-----------");
         for (Process p : ganttChart) {
-            System.out.println(p.getId() + " " + p.getArriveTime() + " " + p.getBurstTime() + " " + p.getPriority());
+            System.out.println(p.getId() + " name: " + p.name + " Start time: " + p.getStartingTime() + " Finish time: " + p.getCompletionTime());
         }
         System.out.println();
     }
@@ -133,7 +146,7 @@ public class PriorityScheduling {
         for (HashMap.Entry<Integer, Integer> entry : waitingTime.entrySet()) {
             averageWaitingTime += entry.getValue();
         }
-        averageWaitingTime /= waitingTime.size();
+        averageWaitingTime /= (double)waitingTime.size();
         System.out.println(averageWaitingTime);
         System.out.println();
     }
@@ -154,7 +167,7 @@ public class PriorityScheduling {
         for (HashMap.Entry<Integer, Integer> entry : turnAroundTime.entrySet()) {
             averageTurnAroundTime += entry.getValue();
         }
-        averageTurnAroundTime /= turnAroundTime.size();
+        averageTurnAroundTime /= (double)turnAroundTime.size();
         System.out.println(averageTurnAroundTime);
         System.out.println();
     }
