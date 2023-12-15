@@ -26,7 +26,7 @@ public class PriorityScheduling {
         turnAroundTime = new HashMap<Integer, Integer>();
     }
 
-    public int getLowestPriorityIndex(ArrayList<Process> processes) {
+    public int getHighestPriorityIndex(ArrayList<Process> processes) {
         int min = (int) 1e9;
         int index = -1;
         for (int i = 0; i < processes.size(); i++) {
@@ -38,7 +38,7 @@ public class PriorityScheduling {
         return index;
     }
 
-    public int getHighestPriorityIndex(ArrayList<Process> processes) {
+    public int getLowestPriorityIndex(ArrayList<Process> processes) {
         int max = -1;
         int index = -1;
         for (int i = 0; i < processes.size(); i++) {
@@ -78,7 +78,7 @@ public class PriorityScheduling {
             if (starv == 3) {
                 starv = 0;
                 for (int i = 0; i < processes.size(); i++) {
-                    processes.get(i).setPriority(processes.get(i).getPriority() + 1);
+                    processes.get(i).setPriority(processes.get(i).getPriority() - 1);
                 }
             } else {
                 starv++;

@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 
@@ -36,7 +34,6 @@ public class AG {
         // processes.get(1).AGFactor = 17;
         // processes.get(2).AGFactor = 16;
         // processes.get(3).AGFactor = 43;
-
     }
 
     public AG(){

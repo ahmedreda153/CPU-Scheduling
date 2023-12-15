@@ -28,20 +28,20 @@ public class SRTF {
         this.finishedProcess = new ArrayList<>();
         this.process.sort((p1, p2) -> p1.getArriveTime() - p2.getArriveTime());
     }
-    public void SRTFScheduling()
+    public List<Integer> SRTFScheduling()
     {
         int totalProcessTime=0;
         for(Process p:process){
             totalProcessTime += p.burstTime;
         }
-        int starvationTime = 5;
+        int starvationTime = 20;
             int time = 0;
             int processIndex = 0;
 
             Process shortestJopProcess = new Process();
             Process runiningProcess= new Process();
             System.out.println(totalProcessTime);
-            for(time=0;time<=totalProcessTime;time++){
+            for(time=0;time<totalProcessTime;time++){
             boolean hasStarvation = false;
 
             if (processIndex < process.size()  && time == process.get(processIndex).arriveTime ) {
@@ -101,6 +101,8 @@ public class SRTF {
        
         printTimeline();
         calcAndPrintWaitingAndTurnarround();
+
+        return timeline;
     
     }
 
