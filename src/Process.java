@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Process {
+    String name;
+    String color;
     int processID;
     int burstTime;
     int startingTime;
@@ -26,7 +28,15 @@ public class Process {
         this.arriveTime = 0;
         this.quantumHistory = new ArrayList<>();
     }
-    
+    public Process(int processID,String name, String color, int arrivalTime, int burstTime, int priority)
+    {
+        this.processID = processID;
+        this.name=name;
+        this.color=color;
+        this.arriveTime=arrivalTime;
+        this.burstTime=burstTime;
+        this.priority=priority;
+    }
     public Process(int processID, int burstTime) {
         this.processID = processID;
         this.burstTime = burstTime;
