@@ -135,7 +135,6 @@ public class PlotWindow extends JFrame {
             }
         }
 
-        // Add the last segment
        
           ProcessD d = new ProcessD(start, processes.size()-1,processes.get(processes.size()-1));
             processTime.add(d);
